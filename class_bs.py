@@ -1,6 +1,6 @@
 #Classes nécessaires
 
-from random import * 
+from random import *
 
 class Balle :
     """Classe permettant de créer une balle d'une certaine couleur"""
@@ -79,7 +79,7 @@ class Plateau :
         
     def mettre_dans(self, balle, tube):
         """ajouter une balle dans un tube"""
-        self.tubes[tube-1].empile(balle)
+        self.tubes[tube].empile(balle)
     
     def deplace_balle(self, tube1, tube2):
         """déplacer une balle d'un tube à un autre"""
@@ -112,19 +112,21 @@ class Plateau :
 
 class Jeu :
     """Classe permettant d'initialiser le plateau et de mettre en relation les autres classe pour faire fonctionner le jeu"""
-    def __init__(self, p):
+    def __init__(self):
         """créer un nouveau jeu"""
-        self.plateau = p
+        self.plateau = Plateau()
+
     
     def initialise_plateau(self):
         """initialise un plateau avec des tubes avec des balles de couleurs"""
         p = Plateau()
-        liste_balles_couleur = ['R','R','R','R','B','B','B','B','J','J','J','J','V','V','V','V',]
-        random.shuffle(liste_balles_couleur)
+        liste_balles_couleur = ['R','R','R','R','B','B','B','B','J','J','J','J','V','V','V','V']
+        shuffle(liste_balles_couleur)
         for i in range(4):
             for j in range(4):
-                p.mettre_dans(Balle(liste_balles_couleur[j]), i)
-                liste_balles_couleur.pop(j)
+                p.mettre_dans(Balle(liste_balles_couleur[0]), i)
+                del liste_balles_couleur[0]
+                print(liste_balles_couleur)
         return p
         
         
@@ -132,21 +134,10 @@ class Jeu :
         """déplace une balle d'un tube à un autre"""
         p.deplace(d, a)
         
-p = Plateau()
-p.mettre_dans( Balle("R") ,1)
-p.mettre_dans( Balle("R") ,1)
-p.mettre_dans( Balle("R") ,1)
-p.mettre_dans( Balle("R") ,1)
-p.mettre_dans( Balle("V") ,4)
-p.mettre_dans( Balle("J") ,2)
-p.mettre_dans( Balle("B") ,3)
-p.mettre_dans( Balle("V") ,4)
-p.mettre_dans( Balle("J") ,2)
-p.mettre_dans( Balle("B") ,3)
-p.mettre_dans( Balle("V") ,4)
-p.mettre_dans( Balle("J") ,2)
-p.mettre_dans( Balle("B") ,3)
-p.mettre_dans( Balle("V") ,4)
-p.mettre_dans( Balle("J") ,2)
+j = Jeu()
+j.initialise_plateau()
+print(j.plateau)
+
+
 p.mettre_dans( Balle("B") ,3)
 print(p)
