@@ -1,0 +1,62 @@
+from tkinter import *
+
+#titre de la fenetre + jeu
+fenetre = Tk()
+fenetre.title("Ball Sort")
+label = Label(fenetre, text="Ball Sort")
+label.pack()
+
+#cadre pour les tubes
+cadre_tubes = Frame(fenetre)
+cadre_tubes.pack(pady=10)
+
+entree = {"Depart":None,"Arrive":None}
+
+def jouer():
+    pass
+
+def annuler():
+    entree["Depart"] = None
+    entree["Arrivee"] = None
+    info_var.set("Sélection annulée. Sélectionne d'abord le tube de départ")
+
+def selection_tube(idx):
+    if entree["Depart"] == None:
+        entree["Depart"]=idx
+        info_var.set(f"Tube de Depart : Tube {idx}")
+    elif entree["Arrive"] == None:
+        #if verifier que depart != arrive
+        entree["Arrive"] = idx
+        info_var.set(f"Tube de depart : tube {entree['Depart']} / Tube d'arrivee : tube {idx}")
+
+    
+#boutons
+for i in range(1,7):
+    bouton = Button(cadre_tubes, text=f"Tube {i}" , command=lambda idx=i: selection_tube(idx) , width=12 , font=("Arial", 12) )
+    bouton.pack(side=LEFT)
+    
+    
+#cadre
+cadre_cmd = Frame(fenetre)
+cadre_cmd.pack()
+
+#texte action en cours
+info_var = StringVar()
+info_var.set("Sélectionne d'abord le tube de départ")
+label_info = Label(cadre_cmd, textvariable=info_var, font=("Arial", 12), fg="#3477ca")
+label_info.pack(pady=8)
+
+#bouton action jeu
+bjouer = Button(cadre_cmd, text="Jouer", command=jouer, bg="#7fd57f", font=("Arial", 12, "bold"))
+bjouer.pack(side=LEFT, padx=8)
+
+bannuler = Button(cadre_cmd, text="Annuler", command=annuler, bg="#fadb8b", font=("Arial", 12))
+bannuler.pack(side=LEFT, padx=8)
+
+bfermer = Button(cadre_cmd, text="Fermer", command=fenetre.quit, bg="#e97474", font=("Arial", 12))
+bfermer.pack(side=LEFT, padx=8)
+
+#lancer la fenetre
+fenetre.mainloop()
+
+
