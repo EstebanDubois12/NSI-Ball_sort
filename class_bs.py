@@ -20,7 +20,8 @@ class Balle :
             c = "bleue"
         chaine = "balle " + c
         return(chaine)
-    
+  
+#class Tube qui contient les instances de balles sous forme de tableau gérés comme des piles et possède des methodes pour les gerer
 class Tube:
     def __init__(self):
         self.balles = []
@@ -81,15 +82,40 @@ class Plateau :
         """ajouter une balle dans un tube"""
         self.tubes[tube].empile(balle)
     
+    
     def deplace_balle(self, tube1, tube2):
+        """
+        Déplace une balle d'un tube à un autre.
+
+        Codes de retour :
+        0 : La balle a bien été déplacée.
+        
+        
+        trycatch a finir !!!
+        
+        1: les tubes selectionnés n'existent pas
+        2 : Les tubes sont les mêmes.
+        3 : Le tube receveur est déjà plein.
+        """
+               trycatch a finir !!!
+        max = len(self.tubes)
+        if tube1 < 0 or tube2 < 0 or tube1 > max or tube2 > max:
+            return 1
+   
+        if tube1 == tube2:
+            return 2
+        
+        if self.tubes[tube2].est_plein():
+            return 3
+        
         """déplacer une balle d'un tube à un autre"""
         self.tubes[tube2-1].empile(self.tubes[tube1-1].depile())
+        return 0
     
     def est_gagnant(self):
         """renvoie un booléen pour savoir si le jeu est gagnant"""
         n = 0
         for i in range(6):
-            print(i)
             if self.tubes[i].est_vide() == True:
                 n += 1
             elif self.tubes[i].est_plein_monochrome() == True:
@@ -119,25 +145,44 @@ class Jeu :
     
     def initialise_plateau(self):
         """initialise un plateau avec des tubes avec des balles de couleurs"""
-        p = Plateau()
+        p = self.plateau
         liste_balles_couleur = ['R','R','R','R','B','B','B','B','J','J','J','J','V','V','V','V']
         shuffle(liste_balles_couleur)
         for i in range(4):
             for j in range(4):
                 p.mettre_dans(Balle(liste_balles_couleur[0]), i)
                 del liste_balles_couleur[0]
-                print(liste_balles_couleur)
         return p
         
         
-    def deplace(self, p, d, a):
+    def deplace(self, d, a):
         """déplace une balle d'un tube à un autre"""
-        p.deplace(d, a)
-        
+        return self.plateau.deplace_balle(d, a)
+
+
+
+
 j = Jeu()
 j.initialise_plateau()
-print(j.plateau)
-
-
-p.mettre_dans( Balle("B") ,3)
-print(p)
+print("Création des balles...")
+while True :
+    print(j.plateau)
+    if j.plateau.est_gagnant():
+        print("Gagné !!")
+        break
+    else :
+        dep = int(input("Tube de départ ?"))
+        if dep == -1 : break
+        arr = int(input("Tube d'arrivée"))
+        result = j.deplace(dep,arr)
+        
+        if result == 1:
+            print("Veuillez choisir des tubes existants")
+            
+        if result == 2:
+            print("Veuillez choisir des tubes diffèrents")
+ 
+        if result == 3:
+            print("On ne peut mettre que 4 balles dans un tube !!!")
+ 
+        
