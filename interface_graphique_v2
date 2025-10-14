@@ -1,0 +1,104 @@
+from class_bs import *
+from  tkinter import *
+
+def dessiner_eprouvette(canvas, x, y, largeur=40, hauteur=180, rayon=20):
+    # Corps rectangle
+    canvas.create_rectangle(x, y, x + largeur, y + hauteur - rayon, fill='lightblue', outline='black')
+    # Bas arrondi sans contour (trait)
+    canvas.create_arc(x, y + hauteur - 2*rayon, x + largeur, y + hauteur, start=0, extent=-180, fill='lightblue', outline='black')
+    # Ligne bleue en haut (fake ligne)
+    canvas.create_line(x, y, x + largeur, y, fill='lightblue', width=2)
+    # Ligne bleue sur la partie plate de l'arc (bas)
+    canvas.create_line(x, y + hauteur - rayon, x + largeur, y + hauteur - rayon, fill='lightblue', width=2)
+
+root = Tk()
+root.geometry("1000x700")
+
+canvas = Canvas(root, width=1000, height=400, bg='white')
+canvas.place(relx=0, rely=0)
+
+#cadre pour les tubes
+cadre_tubes = Frame(root)
+cadre_tubes.pack(pady=10)
+info_var = StringVar()
+label = Label(root, text="Ball Sort", font=("Helvetica", 20, "bold"))
+label.pack()
+
+
+
+entree = {"depart":None,"arrive":None}
+
+def jouer():
+    j.deplace(entree["depart"],entree["arrive"])
+    print("wsh")
+    afficher_plateau()
+
+
+def annuler():
+    entree["depart"] = None
+    entree["arrive"] = None
+    info_var.set("Sélection annulée. Sélectionne d'abord le tube de départ")
+
+def selection_tube(idx):
+    if entree["depart"] == None:
+        entree["depart"]=idx
+        info_var.set(f"Tube de Depart : Tube {idx}")
+    elif entree["arrive"] == None:
+        if idx == entree["depart"]:
+            info_var.set("Choisir un tube different pour l'arrivee")
+        else:
+            entree["arrive"] = idx
+            info_var.set(f"Tube de depart : Tube {entree['depart']} / Tube d'arrivee : Tube {idx}")
+    """        
+    else:
+        entree["depart"] = idx
+        entree["arrive"] = None
+        info_var.set(f"Tube de Depart : Tube {idx}")
+     """
+
+def afficher_plateau():
+    global info_var
+    for i in range(6):
+        dessiner_eprouvette(canvas, 290+80*i, 150)
+        for k in range(4):
+            if not(j.plateau.tubes[i].est_vide()) :
+                a = str(j.plateau.tubes[i].balles[k].couleur)
+                print(a)
+                if a == "R" :
+                    c = "red"
+                if a == "V" :
+                    c = "green"
+                if a == "J" :
+                    c = "yellow"
+                if a == "B" :
+                    c = "blue"
+                cercle = canvas.create_oval(328+80*i, 328-40*k, 292+80*i, 292-40*k, fill= c)
+                
+        #boutons
+    for i in range(1,7):
+        bouton = Button(root, text=f"Tube {i}" , command=lambda idx=i: selection_tube(idx) , width=12 , font=("Arial", 12) )
+        bouton.place(x = 30+120*i, y = 450)
+
+    #texte action en cours
+    
+    info_var.set("Sélectionne d'abord le tube de départ")
+    label_info = Label(root, textvariable=info_var, font=("Arial", 12), fg="#3477ca")
+    label_info.pack(pady=8)
+
+    #bouton action jeu
+    bjouer = Button(root, text="Jouer", command=jouer, bg="#7fd57f", font=("Arial", 12))
+    bjouer.place(x=400,y=500)
+
+    bannuler = Button(root, text="Annuler", command=annuler, bg="#fadb8b", font=("Arial", 12))
+    bannuler.place(x=470,y=500)
+
+    bfermer = Button(root, text="Fermer", command=root.destroy, bg="#e97474", font=("Arial", 12))
+    bfermer.place(x=550,y=500)
+
+j = Jeu()
+j.initialise_plateau()
+print("Création des balles...")
+
+afficher_plateau()
+    
+root.mainloop()
