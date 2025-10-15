@@ -1,15 +1,15 @@
-from class_bs import *
+from classe_bs import *
 from  tkinter import *
 
 def dessiner_eprouvette(canvas, x, y, largeur=40, hauteur=180, rayon=20):
     # Corps rectangle
-    canvas.create_rectangle(x, y, x + largeur, y + hauteur - rayon, fill='lightblue', outline='black')
+    canvas.create_rectangle(x, y, x + largeur, y + hauteur - rayon, fill='#ffffff', outline='black')
     # Bas arrondi sans contour (trait)
-    canvas.create_arc(x, y + hauteur - 2*rayon, x + largeur, y + hauteur, start=0, extent=-180, fill='lightblue', outline='black')
+    canvas.create_arc(x, y + hauteur - 2*rayon, x + largeur, y + hauteur, start=0, extent=-180, fill='#ffffff', outline='black')
     # Ligne bleue en haut (fake ligne)
-    canvas.create_line(x, y, x + largeur, y, fill='lightblue', width=2)
+    canvas.create_line(x, y, x + largeur, y, fill='#ffffff', width=2)
     # Ligne bleue sur la partie plate de l'arc (bas)
-    canvas.create_line(x, y + hauteur - rayon, x + largeur, y + hauteur - rayon, fill='lightblue', width=2)
+    canvas.create_line(x, y + hauteur - rayon, x + largeur, y + hauteur - rayon, fill='#ffffff', width=2)
 
 root = Tk()
 root.geometry("1000x700")
@@ -24,13 +24,18 @@ info_var = StringVar()
 label = Label(root, text="Ball Sort", font=("Helvetica", 20, "bold"))
 label.pack()
 
-
+#texte action en cours
+    
+info_var.set("Sélectionne d'abord le tube de départ")
+label_info = Label(root, textvariable=info_var, font=("Arial", 12), fg="#3477ca")
+label_info.pack(pady=8)
 
 entree = {"depart":None,"arrive":None}
 
 def jouer():
-    j.deplace(entree["depart"],entree["arrive"])
-    print("wsh")
+    j.deplace(entree["depart"]-1,entree["arrive"]-1)
+    entree["depart"] = None
+    entree["arrive"] = None
     afficher_plateau()
 
 
@@ -49,41 +54,36 @@ def selection_tube(idx):
         else:
             entree["arrive"] = idx
             info_var.set(f"Tube de depart : Tube {entree['depart']} / Tube d'arrivee : Tube {idx}")
-    """        
-    else:
-        entree["depart"] = idx
-        entree["arrive"] = None
-        info_var.set(f"Tube de Depart : Tube {idx}")
-     """
+
+def creer_fenetre_fin():
+    monAffichage = Label(root, text = "Félicitations, vous avez gagné ! ", font=("Arial", 15), fg="#000000")
+    monAffichage.place(x=500,y=250)
+    monAffichage.pack() 
 
 def afficher_plateau():
     global info_var
     for i in range(6):
         dessiner_eprouvette(canvas, 290+80*i, 150)
-        for k in range(4):
+        for k in range(len(j.plateau.tubes[i].balles)):
             if not(j.plateau.tubes[i].est_vide()) :
                 a = str(j.plateau.tubes[i].balles[k].couleur)
-                print(a)
                 if a == "R" :
-                    c = "red"
+                    c = "#c72222"
                 if a == "V" :
-                    c = "green"
+                    c = "#82e85d"
                 if a == "J" :
-                    c = "yellow"
+                    c = "#e8e85d"
                 if a == "B" :
-                    c = "blue"
+                    c = "#5da5e8"
                 cercle = canvas.create_oval(328+80*i, 328-40*k, 292+80*i, 292-40*k, fill= c)
                 
+    if j.plateau.est_gagnant():
+        creer_fenetre_fin()
+                
         #boutons
-    for i in range(1,7):
-        bouton = Button(root, text=f"Tube {i}" , command=lambda idx=i: selection_tube(idx) , width=12 , font=("Arial", 12) )
-        bouton.place(x = 30+120*i, y = 450)
-
-    #texte action en cours
-    
-    info_var.set("Sélectionne d'abord le tube de départ")
-    label_info = Label(root, textvariable=info_var, font=("Arial", 12), fg="#3477ca")
-    label_info.pack(pady=8)
+    for i in range(0,6):
+        bouton = Button(root, text=f"Tube {i+1}" , command=lambda idx=i: selection_tube(idx) , width=12 , font=("Arial", 12) )
+        bouton.place(x = 125*i, y = 450)
 
     #bouton action jeu
     bjouer = Button(root, text="Jouer", command=jouer, bg="#7fd57f", font=("Arial", 12))
@@ -97,8 +97,8 @@ def afficher_plateau():
 
 j = Jeu()
 j.initialise_plateau()
-print("Création des balles...")
 
 afficher_plateau()
-    
+
 root.mainloop()
+
