@@ -37,6 +37,7 @@ class Tube:
         return(s)
     
     def sommet(self):
+        print(len(self.balles))
         return self.balles[len(self.balles)-1]
     
     
@@ -89,27 +90,38 @@ class Plateau :
 
         Codes de retour :
         0 : La balle a bien été déplacée.
-        
-        
-        trycatch a finir !!!
-        
-        1: les tubes selectionnés n'existent pas
+        1: Les tubes selectionnés n'existent pas
         2 : Les tubes sont les mêmes.
         3 : Le tube receveur est déjà plein.
+        4: Vous essayez de deplacer une balle sur une couleur autre que la bonne
         """
-               trycatch a finir !!!
-        max = len(self.tubes)
-        if tube1 < 0 or tube2 < 0 or tube1 > max or tube2 > max:
+
+        tube1_object = self.tubes[tube1]
+        
+        if not(self.tubes[tube2].est_vide()): #verifie quele tube receveur n'est pas vide
+            bmax = self.tubes[tube2].sommet()
+            color2 = bmax.couleur
+            if not(self.tubes[tube1].est_vide()): #verifie quele tube ecepteur n'est pas vide
+                bmoved = self.tubes[tube1].sommet()
+                color1 = bmoved.couleur
+                
+                if color2 != color1:
+                    return 4
+        
+        
+        
+        if tube1 < 0 or tube2 < 0 or tube1 > 6 or tube2 > 6:
             return 1
    
         if tube1 == tube2:
             return 2
-        
+      
         if self.tubes[tube2].est_plein():
             return 3
+    
         
         """déplacer une balle d'un tube à un autre"""
-        self.tubes[tube2-1].empile(self.tubes[tube1-1].depile())
+        self.tubes[tube2].empile(self.tubes[tube1].depile())
         return 0
     
     def est_gagnant(self):
@@ -161,7 +173,7 @@ class Jeu :
 
 
 
-
+"""
 j = Jeu()
 j.initialise_plateau()
 print("Création des balles...")
@@ -184,5 +196,6 @@ while True :
  
         if result == 3:
             print("On ne peut mettre que 4 balles dans un tube !!!")
- 
+ """
         
+
