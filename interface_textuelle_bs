@@ -1,0 +1,25 @@
+from classe_bs import *
+
+j = Jeu()
+j.initialise_plateau()
+print("Création des balles...")
+while True :
+    print(j.plateau)
+    if j.plateau.est_gagnant():
+        print("Gagné !!")
+        break
+    else :
+        dep = int(input("Tube de départ ? :"))
+        if dep == -1 : break #permet de fermer le jeu
+        arr = int(input("Tube d'arrivée ? :"))
+        result = j.deplace(dep,arr)
+        
+        if result == 1:
+            print("Veuillez choisir des tubes existants")
+            
+        if result == 2:
+            print("Veuillez choisir des tubes diffèrents")
+ 
+        if result == 3:
+            print("On ne peut mettre que 4 balles dans un tube !!!")
+
